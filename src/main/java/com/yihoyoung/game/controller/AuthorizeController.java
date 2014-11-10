@@ -19,6 +19,7 @@ public class AuthorizeController {
 	@RequestMapping(value = "/checkid", method = {RequestMethod.POST})
 	public ModelAndView checkid(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Locale locale,  Model model) {
 		model.addAttribute("result", 0);
+		logger.info(" 공통 로그 체크 ");
 		return new ModelAndView("jsonView");
 	}
 	
