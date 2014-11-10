@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+  <comment>My Game Server</comment>
+
+  <!-- Server Config  -->
+
+  <entry key="Cfg_ServerName">My Game</entry>
+
+  <entry key="Cfg_UploadPathTmp">D:\tmp\tmp\</entry>
+  <entry key="Cfg_UploadPath_UCC">D:\tmp\ucc\</entry>
+  <entry key="Cfg_UploadPath_Profile">D:\tmp\profile\</entry>
+
+  <entry key="Cfg_UCC_Server">175.211.69.109</entry>
+  <entry key="Cfg_UCC_Server_Port">80</entry>
+  <entry key="Cfg_UCC_URI">/ucc_data/</entry>
+
+  <entry key="Cfg_Profile_Server">175.211.69.109</entry>
+  <entry key="Cfg_Profile_Server_Port">80</entry>
+  <entry key="Cfg_Profile_URI">/ucc_profile/</entry>
+
+  <entry key="Cfg_Patch_Server">175.211.69.109</entry>
+  <entry key="Cfg_Patch_Server_Port">80</entry>
+  <entry key="Cfg_Patch_URI">/patch/</entry>
+
+  <!-- Memcached Config -->
+
+  <entry key="MemcachedServers">yihoyoung.cafe24.com:11211</entry>
+
+  <!-- Mysql DB Connection Config -->
+
+  <entry key="CodeDB_url">jdbc:mysql://yihoyoung.cafe24.com/unicorn?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;autoReconnectForPools=true</entry>
+  <!-- 공용으로 계정사용 필요하다면 추후 분리--> 
+  <entry key="CodeDB_username">root</entry>
+  <entry key="CodeDB_password">yihoyoung111</entry>
+
+  <entry key="GameDB_url">jdbc:mysql://yihoyoung.cafe24.com/unicorn?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;autoReconnectForPools=true</entry>
+  <!--  
+  <entry key="GameDB_username"></entry>
+  <entry key="GameDB_password"></entry>
+  -->
+  <entry key="LogDB_url">jdbc:mysql://yihoyoung.cafe24.com/unicorn?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;autoReconnectForPools=true</entry>
+  <!--  
+  <entry key="LogDB_username"></entry>
+  <entry key="LogDB_password"></entry>
+  -->
+
+  <!-- Game Config -->
+
+
+
+
+</properties>
