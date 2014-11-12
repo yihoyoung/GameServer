@@ -266,7 +266,7 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<version>6.1.11</version>
 				<configuration>
-					<contextPath>/</contextPath>
+					<contextPath>/GameServer</contextPath>
 					<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
 					<scanIntervalSeconds>3</scanIntervalSeconds>
 					<!-- 포트를 변경하고 싶은 경우 connectors 설정 이용 -->

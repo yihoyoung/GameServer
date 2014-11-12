@@ -23,12 +23,41 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
 
+	<!--  DBMS Connect Define -->
+	<beans:bean id="gameDBSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
+		p:url="#{properties.CodeDB_url}"
+		p:username="#{properties.CodeDB_username}" p:password="#{properties.CodeDB_password}"
+		p:validationQuery="SELECT 1"
+		/>
+
+	<beans:bean id="logDBSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
+		p:url="#{properties.GameDB_url}"
+		p:username="#{properties.CodeDB_username}" p:password="#{properties.CodeDB_password}"
+		p:validationQuery="SELECT 1"
+		/>
+
+	<beans:bean id="userDBSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
+		p:url="#{properties.LogDB_url}"
+		p:username="#{properties.CodeDB_username}" p:password="#{properties.CodeDB_password}"
+		p:validationQuery="SELECT 1"
+		/>
+
+	<!-- DAO BEAN INSTANCE -->
+	<beans:bean id="gameDao" 		class="com.yihoyoung.game.dao.GameDao" 	 		p:dataSource-ref="gameDBSource"/>
+	<beans:bean id="logDao" 		class="com.yihoyoung.game.dao.LogDao" 	 		p:dataSource-ref="logDBSource"/>
+	<beans:bean id="userDao" 		class="com.yihoyoung.game.dao.UserDao" 	 		p:dataSource-ref="userDBSource"/>
+	
+	<annotation-driven />
+	
 	<context:component-scan base-package="com.yihoyoung.game" />
-	<context:component-scan base-package="com.yihoyoung.game.dao" />
-	<context:component-scan base-package="com.yihoyoung.game.controller" />
 	<context:component-scan base-package="com.yihoyoung.game.service" />
+	
+	<beans:bean id="jsonView" 	class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+	<beans:bean id="viewResolver" 	class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />

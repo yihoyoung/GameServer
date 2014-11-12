@@ -6,113 +6,94 @@ import java.util.concurrent.Future;
 import net.spy.memcached.MemcachedClientIF;
 import net.spy.memcached.OperationTimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class CacheServiceMemcached implements CacheService {
+public class CacheServiceMemcached {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(CacheServiceMemcached.class);
 
 	@Autowired
 	MemcachedClientIF memcachedClient;
-	
-	int expireTime = 60 * 60 * 24;  //초단위 
 
-	@Override
-	public <T> void put(String key, T value) 
-	{
+	int expireTime = 60 * 60 * 24; // 초단위
+
+	public <T> void put(String key, T value) {
 		put(key, value, this.expireTime);
 	}
-	
-	@Override
-	public <T> void put(String key, T value, int expireTime)
-	{
-		//System.out.println(String.format("cacheServiceMemcached put, key = %s, expireTime = %d, value = %s", key, expireTime, value));
-		
-		Future<Boolean> future = memcachedClient.set(key, this.expireTime, value);
-		
-		try 
-		{
-			
-			if ( !future.get().booleanValue() )
-			{
-				System.out.println("set failed !! --> add , key="+key);
-				
+
+	public <T> void put(String key, T value, int expireTime) {
+
+		Future<Boolean> future = memcachedClient.set(key, this.expireTime,
+				value);
+
+		try {
+
+			if (!future.get().booleanValue()) {
+				logger.info("set failed !! --> add , key=" + key);
+
 				future = memcachedClient.add(key, this.expireTime, value);
-				
-				System.out.println(String.format("set result - %s", future.get().toString()));
+
+				logger.info(String.format("set result - %s", future
+						.get().toString()));
 			}
 
-		} 
-		catch (InterruptedException e) 
-		{
-			// TODO : memcached 오류 처리
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-		} 
-		catch (ExecutionException e) 
-		{
-			// TODO : memcached 오류 처리
+		} catch (ExecutionException e) {
 			e.printStackTrace();
-		}			
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public <T> T get(String key) {
-		//System.out.println(String.format("cacheServiceMemcached get :: key = %s", key));
+		// logger.info(String.format("cacheServiceMemcached get :: key = %s",
+		// key));
 
 		// binary protocol 만 지원
-		memcachedClient.touch(key, expireTime);	//폐기시간 연장
-		/* 1.4.4 버전에서는 touch 안됨
-		Future<Boolean> future = memcachedClient.touch(key, expireTime);
-		try {
-			System.out.println("memcached get touch test : future.get() " + future.get() );
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
-			e1.printStackTrace();
-		}
-		*/
+		memcachedClient.touch(key, expireTime); // 폐기시간 연장
+		/*
+		 * 1.4.4 버전에서는 touch 안됨 Future<Boolean> future =
+		 * memcachedClient.touch(key, expireTime); try {
+		 * logger.info("memcached get touch test : future.get() " +
+		 * future.get() ); } catch (InterruptedException e1) {
+		 * e1.printStackTrace(); } catch (ExecutionException e1) {
+		 * e1.printStackTrace(); }
+		 */
 		T data = null;
 		try {
-			data = (T)memcachedClient.get(key);
-		} catch (OperationTimeoutException e){
-			System.out.println(String.format("[ERROR] OperationTimeoutException get :: key = %s, %s",key, e.toString()));
+			data = (T) memcachedClient.get(key);
+		} catch (OperationTimeoutException e) {
+			logger.info(String.format(
+					"[ERROR] OperationTimeoutException get :: key = %s, %s",
+					key, e.toString()));
 		}
-		
 
 		return data;
 	}
 
-	@Override
-	public void delete(String key) 
-	{
-		//System.out.println(String.format("[INFO] cacheServiceMemcached del :: key = %s", key));
-		
+	public void delete(String key) {
+
 		Future<Boolean> future = memcachedClient.delete(key);
-		
+
 		try {
-			if ( future.get() == false)
-			{
-				System.out.println("[ERROR] cacheServiceMemcached delete error. key="+key);
-				
+			if (future.get() == false) {
+				logger.info("[ERROR] cacheServiceMemcached delete error. key="
+								+ key);
+
 			}
-		}
-		catch (InterruptedException e) 
-		{
-			// TODO : memcached 오류 처리
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		catch (ExecutionException e) 
-		{
-			// TODO : memcached 오류 처리
-			e.printStackTrace();
-		}
-		
+
 	}
-	
-	@Override
-	public boolean checkMemcachedFeature(){
-		//memcached 기능점검
-		//1.4.4 버전에서 터치 기능 안됨.
-		String key="_checkMemcachedFeature";
+
+	public boolean checkMemcachedFeature() {
+		String key = "_checkMemcachedFeature";
 		put(key, "dummy", 60);
 		try {
 			delete(key);
@@ -123,32 +104,11 @@ public class CacheServiceMemcached implements CacheService {
 		return false;
 	}
 
-	public long incValue(String key, int addValue)
-	{
+	public long incValue(String key, int addValue) {
 		return memcachedClient.incr(key, addValue);
 	}
 
-	public long decValue(String key, int subValue)
-	{
+	public long decValue(String key, int subValue) {
 		return memcachedClient.decr(key, subValue);
 	}
-	/*
-	public boolean WriteLock(int playerID, int keytype)
-	{
-		
-		if (memcachedClient.add(playerID+"_lock_"+keytype, 1, null) != null){;//  ("lock:xyz", "1", System.currentTimeMillis() + 10000)) {
-			  try {
-			    //doSomeExpensiveStuff();
-			  } finally {
-				  memcachedClient.delete(playerID+"_lock_"+keytype);
-			  }
-			} else {
-			  // someone else is doing the expensive stuff
-			}
-	}
-	public boolean  DeleteLock(int playerID, int keytype) 
-	{
-		memcachedClient.delete(playerID+"_lock_"+keytype);
-	}
-		*/
 }
