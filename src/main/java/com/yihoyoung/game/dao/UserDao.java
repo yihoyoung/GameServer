@@ -39,7 +39,7 @@ public class UserDao {
 		return userInfo;
 	}
 
-	public Map<String, Object> login(String user_id) {
+	public Map<String, Object> userInfoByUserId(String user_id) {
 		String sql = "select * from user where user_id = :user_id";
 		Map<String, Object> userInfo = null;
 		userInfo = jdbcTemplate.queryForMap(sql, user_id);

@@ -52,7 +52,7 @@ public class AuthorizeController {
 			HttpServletResponse httpResponse, Locale locale, Model model) {
 		String user_id = httpRequest.getParameter("user_id");
 		String password = httpRequest.getParameter("password");
-		Map<String, Object> userInfo = userDao.login(user_id, password);
+		Map<String, Object> userInfo = userDao.userInfoByUserId(user_id);
 
 		if (userInfo == null) {
 			throw new ServiceException("user info is not exist.");
