@@ -19,17 +19,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yihoyoung.game.dao.UserDao;
 import com.yihoyoung.game.exception.ServiceException;
+import com.yihoyoung.game.service.UserService;
 
 @Controller
 public class AuthorizeController {
-	
+
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private UserService userService;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(AuthorizeController.class);
 
-	@RequestMapping(value = "/checkid", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/checkid", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	public ModelAndView checkid(HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse, Locale locale, Model model) {
 		model.addAttribute("result", 0);
@@ -57,12 +61,21 @@ public class AuthorizeController {
 		if (userInfo == null) {
 			throw new ServiceException("user info is not exist.");
 		}
-		
-		if(!StringUtils.equals(password, MapUtils.getString(userInfo, "password"))) {
+
+		if (!StringUtils.equals(password,
+				MapUtils.getString(userInfo, "password"))) {
 			throw new ServiceException("password is wrong.");
 		}
 
 		model.addAttribute("result", 0);
+		return new ModelAndView("jsonView");
+	}
+	
+	@RequestMapping(value = "/generator", method = { RequestMethod.POST })
+	public ModelAndView generatorUser(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Locale locale, Model model) {
+		String user_id = httpRequest.getParameter("user_id");
+		String user_pwd = httpRequest.getParameter("user_pwd");
+		String user_name = httpRequest.getParameter("user_name");
 		return new ModelAndView("jsonView");
 	}
 }

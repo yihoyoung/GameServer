@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +55,4 @@ public class LogDao {
 			int bef_cash_money, int bef_cash_event, int objectKind, int data) {
 	}
 
-	private void LogPlay(String logTable, int playerID, int logType, int CD) {
-	}
 }

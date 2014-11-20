@@ -42,7 +42,7 @@ public class AccountToken implements Serializable {
 			return;
 		}
 		String[] values = tokenString.split(".");
-
+ 
 		if (values.length != 3) {
 			return;
 		}
