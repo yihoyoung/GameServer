@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 import com.yihoyoung.game.dao.CodeDao;
 import com.yihoyoung.game.dao.UserDao;
 
+
 @Service
 public class UserService {
 	@Autowired
 	private CodeDao codeDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private EventService eventService;
 
 	public void generatorUser(String user_id, String user_pwd, String user_name) {
 		List<Map<String, Object>> configList = codeDao.getConfig();
@@ -54,11 +57,12 @@ public class UserService {
 			}
 		}
 
-		userDao.generatorUser(user_id, user_pwd, user_name, initLevel, initExp,
+		int userNo = userDao.generatorUser(user_id, user_pwd, user_name, initLevel, initExp,
 				initGold, initCrystal, initEnergy);
-		
-		if(initEventCode > 0) {
-			
+
+		// 신규 계정 초기화 이벤트 선물
+		if (initEventCode > 0) {
+			eventService.getRewardByEventId(userNo, initEventCode);
 		}
 	}
 }
