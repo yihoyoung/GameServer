@@ -5,8 +5,11 @@ import java.util.UUID;
 
 public class AccountToken implements Serializable {
 
-	private static final long serialVersionUID = -6949485834673858852L;
+	//private static final long serialVersionUID = -6949485834673858852L;
 
+	/**
+	 * 
+	 */
 	private String userId = null;
 	private String key = null;
 	private long issueTime = 0; // format - unix time
